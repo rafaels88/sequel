@@ -49,7 +49,12 @@ module Sequel
           s.to_f 
         end
       end
-      def date(s) ::Date.new(*s.split('-').map(&:to_i)) end
+      def date(s)
+        nums = s.split('-')
+        nums[0] = "-#{nums[0]}" if s.to_s =~ /BC$/
+
+        ::Date.new(*nums.map(&:to_i))
+      end
       def bytea(str)
         str = if str =~ /\A\\x/
           # PostgreSQL 9.0+ bytea hex format

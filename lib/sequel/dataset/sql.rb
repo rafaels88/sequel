@@ -1329,13 +1329,15 @@ module Sequel
     end
 
     # SQL fragment for Date, using the ISO8601 format.
-    def literal_date(v)
-      if requires_sql_standard_datetimes?
-        v.strftime("DATE '%Y-%m-%d'")
-      else
-        v.strftime("'%Y-%m-%d'")
-      end
-    end
+   def literal_date(v)
+     if requires_sql_standard_datetimes?
+       v.strftime("DATE '%Y-%m-%d'")
+     elsif v.year.negative?
+       "'#{v.year * -1}-#{v.month}-#{v.day} BC'"
+     else
+       v.strftime("'%Y-%m-%d'")
+     end
+   end
 
     # SQL fragment for DateTime
     def literal_datetime(v)
